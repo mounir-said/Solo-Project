@@ -8,6 +8,8 @@
     <title>Reorder Favorites</title>
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="<c:url value='/css/styles.css' />">
+    
     <style>
         body { font-family: Arial, sans-serif; }
         .navbar { margin-bottom: 20px; }

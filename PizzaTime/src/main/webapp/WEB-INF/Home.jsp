@@ -11,6 +11,8 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Americratika&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="<c:url value='/css/styles.css' />">
+    
     <style>
         body { font-family: Arial, sans-serif; }
         .navbar { margin-bottom: 20px; }
