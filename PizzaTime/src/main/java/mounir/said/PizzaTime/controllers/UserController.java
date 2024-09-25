@@ -1,4 +1,3 @@
-
 package mounir.said.PizzaTime.controllers;
 
 import java.util.List;
@@ -24,7 +23,7 @@ import mounir.said.PizzaTime.services.OrderService;
 import mounir.said.PizzaTime.services.UserService;
 
 @Controller
-public class MainController {
+public class UserController {
 
     @Autowired
     private UserService userService;
@@ -121,7 +120,7 @@ public class MainController {
             return "redirect:/";
         }
         model.addAttribute("userId", currentUserId);
-        return "Home.jsp";
+        return "home.jsp";
     }
 
     /**
@@ -141,17 +140,14 @@ public class MainController {
         model.addAttribute("user", userService.findUserById(currentUserId));
         model.addAttribute("pastOrders", pastOrders);
         model.addAttribute("favoriteOrders", favoriteOrders);
-        return "Account.jsp";
+        return "account.jsp";
     }
-
-       
-
 
     /**
      * Edits user account details.
      */
     @PutMapping("/editaccount/{id}")
-    public String editAccount(HttpSession session, 
+    public String editAccount(HttpSession session,
                               @PathVariable("id") Long userId,
                               @Valid @ModelAttribute("userDto") UserUpdateDto userDto,
                               BindingResult result) {
@@ -160,7 +156,7 @@ public class MainController {
             return "redirect:/";
         }
         if (result.hasErrors()) {
-            return "Account.jsp";
+            return "account.jsp";
         }
         userService.updateUser(currentUserId, userDto);
         return "redirect:/account/" + currentUserId;
@@ -178,148 +174,14 @@ public class MainController {
         userService.favoriteOrderById(currentUserId, orderId);
         return "redirect:/account/" + currentUserId;
     }
-    
- // Add this method in your controller
-    @GetMapping("/reorder/favorite")
-    public String reorderFavorite(HttpSession session, Model model) {
-        Long currentUserId = (Long) session.getAttribute("userId");
-        if (currentUserId == null) {
-            return "redirect:/";
-        }
 
-        List<Order> favoriteOrders = orderService.getFavoriteOrders(currentUserId);
-        model.addAttribute("favoriteOrders", favoriteOrders);
-
-        return "reorderFavorite.jsp"; // Make sure to create this JSP file
-    }
-    
- // Add this method in your controller
-    @GetMapping("/order/reorder/{id}")
-    public String reorderPizza(@PathVariable("id") Long orderId, HttpSession session) {
-        Long currentUserId = (Long) session.getAttribute("userId");
-        if (currentUserId == null) {
-            return "redirect:/";
-        }
-
-        // Fetch the order and reprocess it (for example, by creating a new order entry)
-        Order order = orderService.getOneOrder(orderId);
-        if (order != null) {
-            // Process the reordering (e.g., creating a new order, updating status, etc.)
-            orderService.createOrder(order);
-        }
-
-        return "redirect:/account/" + currentUserId;
-    }
-    
-    @GetMapping("/order/surprise")
-    public String surpriseMe(HttpSession session, Model model) {
-        Long currentUserId = (Long) session.getAttribute("userId");
-        if (currentUserId == null) {
-            return "redirect:/";
-        }
-
-        Order randomOrder = orderService.createRandomOrder(currentUserId);
-        model.addAttribute("order", randomOrder);
-        return "surpriseMe.jsp";
-    }
-
-    @PostMapping("/order/random")
-    public String orderRandomPizza(HttpSession session) {
-        Long currentUserId = (Long) session.getAttribute("userId");
-        if (currentUserId == null) {
-            return "redirect:/login"; // Redirect to login if the user is not logged in
-        }
-        
-        // Pass the user ID to the createRandomOrder method
-        Order randomOrder = orderService.createRandomOrder(currentUserId);
-        
-        return "redirect:/checkout/" + randomOrder.getId(); // Redirect to checkout or another page
-    }
-
-
-
-    /**
-     * Displays the order creation form.
-     */
-    @GetMapping("/order")
-    public String orderForm(@ModelAttribute("order") Order order, Model model, HttpSession session) {
-        Long currentUserId = (Long) session.getAttribute("userId");
-        if (currentUserId == null) {
-            return "redirect:/";
-        }
-        model.addAttribute("userId", currentUserId);
-        model.addAttribute("user", userService.findUserById(currentUserId));
-        return "CreateOrder.jsp";
-    }
-
-    /**
-     * Creates a new order and redirects to checkout.
-     */
-    @PostMapping("/createorder")
-    public String createOrder(Model model, HttpSession session, @Valid @ModelAttribute("order") Order order,
-                              BindingResult result) {
-        Long currentUserId = (Long) session.getAttribute("userId");
-        if (currentUserId == null) {
-            return "redirect:/";
-        }
-        Order currentOrder = orderService.createOrder(order);
-        session.setAttribute("currentOrder", currentOrder);
-        return "redirect:/checkout/" + currentOrder.getId();
-    }
-
-
-    /**
-     * Displays the checkout page for the current order.
-     */
-    @GetMapping("/checkout/{id}")
-    public String checkoutPage(Model model, @PathVariable("id") Long orderId, HttpSession session) {
-        Long currentUserId = (Long) session.getAttribute("userId");
-        if (currentUserId == null) {
-            return "redirect:/";
-        }
-        Order currentOrder = (Order) session.getAttribute("currentOrder");
-        model.addAttribute("currentOrder", currentOrder);
-        Double price = 9.99 + currentOrder.getToppings().size() * 0.50;
-        model.addAttribute("price", price);
-        return "Checkout.jsp";
-    }
-
-    /**
-     * Completes the purchase and redirects to the home page.
-     */
-    @PostMapping("/purchase/{id}")
-    public String purchaseOrder(@PathVariable("id") Long id, HttpSession session) {
-        Long currentUserId = (Long) session.getAttribute("userId");
-        if (currentUserId == null) {
-            return "redirect:/";
-        }
-        session.removeAttribute("currentOrder");
-        return "redirect:/home";
-    }
-
-    /**
-     * Deletes an order and redirects to the order creation page.
-     */
-    @DeleteMapping("/checkout/{id}/delete")
-    public String deleteOrder(@PathVariable("id") Long id, HttpSession session) {
-        Long currentUserId = (Long) session.getAttribute("userId");
-        if (currentUserId == null) {
-            return "redirect:/";
-        }
-        orderService.deleteOrder(id);
-        session.removeAttribute("currentOrder");
-        return "redirect:/order";
-    }
-    
     @DeleteMapping("/account/{id}")
-    public String deleteNewOrder(@PathVariable("id") Long id, HttpSession session) {
+    public String deleteAccountOrder(@PathVariable("id") Long id, HttpSession session) {
         Long currentUserId = (Long) session.getAttribute("userId");
         if (currentUserId == null) {
             return "redirect:/";
         }
         orderService.deleteOrder(id);
-        session.removeAttribute("currentOrder");
         return "redirect:/account/" + currentUserId;
     }
-
 }

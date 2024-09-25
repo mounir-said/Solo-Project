@@ -16,6 +16,12 @@
         }
         .btn-custom {
             width: 100%; /* Make the button full width */
+            border: 2px solid green; /* Add border */
+            background-color: green; /* Green background color */
+            color: white; /* Text color */
+        }
+        .btn-custom:hover {
+            background-color: darkgreen; /* Darker green on hover */
         }
     </style>
 </head>
