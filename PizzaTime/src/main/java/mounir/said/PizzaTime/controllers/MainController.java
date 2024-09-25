@@ -218,9 +218,22 @@ public class MainController {
             return "redirect:/";
         }
 
-        Order randomOrder = orderService.createRandomOrder();
+        Order randomOrder = orderService.createRandomOrder(currentUserId);
         model.addAttribute("order", randomOrder);
         return "surpriseMe.jsp";
+    }
+
+    @PostMapping("/order/random")
+    public String orderRandomPizza(HttpSession session) {
+        Long currentUserId = (Long) session.getAttribute("userId");
+        if (currentUserId == null) {
+            return "redirect:/login"; // Redirect to login if the user is not logged in
+        }
+        
+        // Pass the user ID to the createRandomOrder method
+        Order randomOrder = orderService.createRandomOrder(currentUserId);
+        
+        return "redirect:/checkout/" + randomOrder.getId(); // Redirect to checkout or another page
     }
 
 
@@ -253,6 +266,7 @@ public class MainController {
         session.setAttribute("currentOrder", currentOrder);
         return "redirect:/checkout/" + currentOrder.getId();
     }
+
 
     /**
      * Displays the checkout page for the current order.
