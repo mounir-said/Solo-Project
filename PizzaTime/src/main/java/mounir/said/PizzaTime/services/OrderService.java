@@ -69,6 +69,10 @@ public class OrderService {
 		return "DELETED";
 	}
 	
+	public String deleteNewOrder(Long id) {
+		this.oRepo.deleteById(id);
+		return "DELETED";
+	}
 	public List<Order> getFavoriteOrders(Long userId) {
         return oRepo.findAllByFavoritedById(userId);
     }

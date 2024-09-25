@@ -16,6 +16,7 @@ public interface OrderRepository extends CrudRepository<Order, Long>{
     List<Order> findAll();
     List<Order> findAllByFavoritedById(Long userId);
     public List<Order> findAllByUserId(Long userId);
-
+    List<Order> findFavoriteOrdersByUserId(Long userId);
+    List<Order> findPastOrdersByUserId(Long userId);
 
 }

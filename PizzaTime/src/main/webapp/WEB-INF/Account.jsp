@@ -21,28 +21,28 @@
 </head>
 <body>
     <!-- Navbar -->
-   <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="#">Pizza Pete's</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav ml-auto">
-            <li class="nav-item">
-                <a class="nav-link" href="/home">Home</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/order">Order</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/account/${userId}">Account</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/logout">Logout</a>
-            </li>
-        </ul>
-    </div>
-</nav>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">Pizza Pete's</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/home">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/order">Order</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/account/${userId}">Account</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/logout">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
 
     <div class="container mt-4">
         <div class="row">
@@ -71,7 +71,7 @@
                         <form:input type="text" path="address" class="form-control"/>
                         <form:errors path="address" cssClass="text-danger"/>
                     </div>
-                    <div class="form-row"> <!-- Start a new row for City and State -->
+                    <div class="form-row">
                         <div class="form-group col-md-6">
                             <form:label path="city">City:</form:label>
                             <form:input type="text" path="city" class="form-control"/>
@@ -119,7 +119,13 @@
                                     <c:if test="${!status.last}">, </c:if>
                                 </c:forEach>
                             </p>
-                            <a href="/favorite/${order.id}" class="btn btn-sm btn-success">Make Favorite</a>
+                            <div class="d-flex justify-content-between">
+                                <a href="/favorite/${order.id}" class="btn btn-sm btn-success">Make Favorite</a>
+                                <form action="/account/${order.id}" method="post" class="form-inline" onsubmit="return confirmDelete();">
+                                    <input type="hidden" name="_method" value="delete">
+                                    <input type="submit" class="btn btn-danger" value="Delete Order">
+                                </form>
+                            </div>
                         </div>
                     </c:forEach>
                 </div>
@@ -131,5 +137,10 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        function confirmDelete() {
+            return confirm('Are you sure you want to delete this order?');
+        }
+    </script>
 </body>
 </html>

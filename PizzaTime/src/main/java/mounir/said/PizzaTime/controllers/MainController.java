@@ -1,3 +1,4 @@
+
 package mounir.said.PizzaTime.controllers;
 
 import java.util.List;
@@ -295,4 +296,16 @@ public class MainController {
         session.removeAttribute("currentOrder");
         return "redirect:/order";
     }
+    
+    @DeleteMapping("/account/{id}")
+    public String deleteNewOrder(@PathVariable("id") Long id, HttpSession session) {
+        Long currentUserId = (Long) session.getAttribute("userId");
+        if (currentUserId == null) {
+            return "redirect:/";
+        }
+        orderService.deleteOrder(id);
+        session.removeAttribute("currentOrder");
+        return "redirect:/account/" + currentUserId;
+    }
+
 }
